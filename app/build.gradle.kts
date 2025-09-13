@@ -43,6 +43,9 @@ android {
 dependencies {
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("io.coil-kt:coil-compose:2.2.2")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.lottie.compose)
     implementation(libs.androidx.core.ktx)

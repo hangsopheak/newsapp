@@ -10,9 +10,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.rupp.newsapp.ArticleDetailActivity
-import com.rupp.newsapp.core.domain.model.Article
-import com.rupp.newsapp.core.presentation.ArticleCardVertical
-import com.rupp.newsapp.core.data.ArticleDataSource
+import com.rupp.newsapp.shared.domain.model.Article
+import com.rupp.newsapp.shared.presentation.ArticleCardVertical
+import com.rupp.newsapp.shared.data.local.ArticleDataSource
 
 @Composable
 fun BookMarkScreenContent(modifier: Modifier = Modifier) {

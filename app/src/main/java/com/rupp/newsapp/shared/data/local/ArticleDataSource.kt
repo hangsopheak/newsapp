@@ -1,6 +1,6 @@
-package com.rupp.newsapp.core.data
+package com.rupp.newsapp.shared.data.local
 
-import com.rupp.newsapp.core.domain.model.Article
+import com.rupp.newsapp.shared.domain.model.Article
 import com.rupp.newsapp.core.utils.ImageUrlHelper
 import com.rupp.newsapp.feature.home.data.randomPublishedAt
 

@@ -1,5 +1,4 @@
-package com.rupp.newsapp.core.utils
-
+package com.rupp.newsapp.shared.utils
 
 enum class ArticleFlagEnum(val id: Int, val description: String) {
     BREAKING_NEWS(1, "Breaking News"),

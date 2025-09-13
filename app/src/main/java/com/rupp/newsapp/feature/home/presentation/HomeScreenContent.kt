@@ -1,7 +1,8 @@
-package com.rupp.newsapp.core.utils
+package com.rupp.newsapp.feature.home.presentation
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,20 +10,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_5
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.rupp.newsapp.ArticleDetailActivity
 import com.rupp.newsapp.ArticleListByFlagActivity
-import com.rupp.newsapp.core.domain.model.Article
-import com.rupp.newsapp.feature.home.data.HomeData
-import com.rupp.newsapp.feature.home.presentation.HomeArticleItems
-import com.rupp.newsapp.feature.home.presentation.SectionTitleBar
+import com.rupp.newsapp.shared.domain.model.Article
+import com.rupp.newsapp.shared.data.repository.ArticleRepository
+import com.rupp.newsapp.shared.utils.ArticleFlagEnum
 import com.rupp.newsapp.ui.theme.NewsAppTheme
 
 
@@ -31,7 +35,7 @@ fun NewsSection(
     articleFlagEnum: ArticleFlagEnum,
     articles: List<Article>,
 
-) {
+    ) {
     val context = LocalContext.current
     SectionTitleBar(articleFlagEnum.description, onSeeMoreClicked = { onSeeMoreClicked(context, articleFlagEnum.id) })
     HomeArticleItems(articles)
@@ -43,6 +47,13 @@ fun NewsSection(
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, device = PIXEL_5)
 fun HomeScreenContent() {
+    val repository = remember { ArticleRepository() }
+    val viewModel =  HomeViewModel(repository)
+
+    val state by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
+    LaunchedEffect(Unit) { viewModel.loadHomeArticles() }
+
     NewsAppTheme {
         Column(
             modifier = Modifier
@@ -51,9 +62,21 @@ fun HomeScreenContent() {
                 .padding(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            NewsSection(ArticleFlagEnum.BREAKING_NEWS, HomeData.breakingArticles)
-            NewsSection(ArticleFlagEnum.FEATURED_NEWS, HomeData.featuredArticles)
-            NewsSection(ArticleFlagEnum.LATEST_NEWS, HomeData.latestArticles)
+
+            when {
+                state.isLoading -> CircularProgressIndicator()
+                state.error != null -> {
+                    LaunchedEffect(state.error) {
+                        Toast.makeText(context, "Error: ${state.error}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                else -> {
+                    NewsSection(ArticleFlagEnum.BREAKING_NEWS, state.breakingArticles)
+                    NewsSection(ArticleFlagEnum.FEATURED_NEWS, state.featuredArticles)
+                    NewsSection(ArticleFlagEnum.LATEST_NEWS, state.latestArticles)
+                }
+            }
+
         }
     }
 }

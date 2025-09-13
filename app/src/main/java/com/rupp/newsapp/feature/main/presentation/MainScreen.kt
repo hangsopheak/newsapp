@@ -9,8 +9,6 @@ import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Explore
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -29,7 +27,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import com.rupp.newsapp.core.utils.HomeScreenContent
+import com.rupp.newsapp.feature.home.presentation.HomeScreenContent
 import com.rupp.newsapp.feature.bookmark.presentation.BookMarkScreenContent
 import com.rupp.newsapp.feature.explore.presentation.ExploreScreenContent
 import com.rupp.newsapp.feature.more.presentation.MoreScreenContent

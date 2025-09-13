@@ -1,9 +1,8 @@
-package com.rupp.newsapp.core.domain.model
+package com.rupp.newsapp.shared.domain.model
 
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.Date
-
 
 data class Article(
     val id: Int,
@@ -11,7 +10,7 @@ data class Article(
     val title: String,
     val content: String,
     val imageUrl: String,
-    val author: String,
+    val author: String?,
     val publishedAt: Date = Date.from(Instant.now().minus((1..100).random().toLong(), ChronoUnit.HOURS)),
     val category: Category,
     val isBreaking: Boolean = false,
@@ -19,5 +18,4 @@ data class Article(
     val isLatest: Boolean = false,
     val isBookMarked : Boolean = false,
 
-)
-
+    )

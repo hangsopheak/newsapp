@@ -1,4 +1,4 @@
-package com.rupp.newsapp.core.presentation
+package com.rupp.newsapp.shared.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
@@ -30,8 +30,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rupp.newsapp.R
-import com.rupp.newsapp.core.data.ArticleDataSource
-import com.rupp.newsapp.core.domain.model.Article
+import com.rupp.newsapp.shared.data.local.ArticleDataSource
+import com.rupp.newsapp.shared.domain.model.Article
 import com.rupp.newsapp.core.utils.DateFormatUtil.toArticleDate
 
 @Composable
@@ -69,8 +69,9 @@ fun ArticleTitleSection(
             Spacer(Modifier.size(8.dp))
             Column {
                 Text(
-                    text = article.author,
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = article.author ?: "Unknown",
+                    maxLines = 1,
+                    style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(

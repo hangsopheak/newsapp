@@ -1,4 +1,4 @@
-package com.rupp.newsapp.core.presentation
+package com.rupp.newsapp.shared.presentation
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -19,8 +19,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.rupp.newsapp.core.domain.model.Article
-import com.rupp.newsapp.core.data.ArticleDataSource
+import com.rupp.newsapp.shared.domain.model.Article
+import com.rupp.newsapp.shared.data.local.ArticleDataSource
 
 
 @Composable
@@ -35,7 +35,7 @@ fun ArticleCardVertical(article: Article, showBookMark: Boolean = true, onClick:
         ),
     ) {
         Row(modifier = Modifier.fillMaxWidth().padding(8.dp), verticalAlignment =Alignment.Top , horizontalArrangement = Arrangement.SpaceBetween) {
-            ArticleTitleSection(article = article, titleFontSize = 14, showBookMark = showBookMark, modifier = Modifier.weight(1f).padding(end = 8.dp))
+            ArticleTitleSection(article = article, titleFontSize = 16, showBookMark = showBookMark, modifier = Modifier.weight(1f).padding(end = 8.dp))
             AsyncImage(
                 model = article.imageUrl,
                 contentDescription = article.title,

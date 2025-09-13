@@ -1,8 +1,8 @@
 package com.rupp.newsapp.feature.home.data
 
 import com.rupp.newsapp.core.utils.ImageUrlHelper
-import com.rupp.newsapp.core.data.CategoryData.categories
-import com.rupp.newsapp.core.domain.model.Article
+import com.rupp.newsapp.shared.data.local.CategoryData.categories
+import com.rupp.newsapp.shared.domain.model.Article
 import java.util.Calendar
 import java.util.Date
 import kotlin.random.Random

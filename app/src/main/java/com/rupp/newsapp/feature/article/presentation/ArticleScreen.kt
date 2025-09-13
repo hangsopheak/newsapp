@@ -25,10 +25,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -43,11 +42,13 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.text.HtmlCompat
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.rupp.newsapp.core.data.CategoryData.categories
-import com.rupp.newsapp.core.domain.model.Article
-import com.rupp.newsapp.core.presentation.ArticleTitleSection
+import com.rupp.newsapp.shared.data.local.CategoryData.categories
+import com.rupp.newsapp.shared.domain.model.Article
+import com.rupp.newsapp.shared.presentation.ArticleTitleSection
 import com.rupp.newsapp.core.utils.ImageUrlHelper
 import com.rupp.newsapp.feature.home.data.randomPublishedAt
+import com.rupp.newsapp.feature.home.presentation.HomeViewModel
+import com.rupp.newsapp.shared.data.repository.ArticleRepository
 import com.rupp.newsapp.ui.theme.NewsAppTheme
 
 
@@ -56,6 +57,7 @@ fun ArticleScreen(modifier: Modifier = Modifier,
                   article: Article,
                   onBackClick: () -> Unit = {}
                   ) {
+
     LazyColumn(
         modifier = modifier.fillMaxSize()
     ) {

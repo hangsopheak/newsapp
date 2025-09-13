@@ -2,37 +2,99 @@
 package com.rupp.newsapp
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.rupp.newsapp.core.data.ArticleDataSource
-import com.rupp.newsapp.core.domain.model.Article
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import com.rupp.newsapp.feature.article.presentation.ArticleScreen
+import com.rupp.newsapp.feature.article.presentation.ArticleViewModel
+import com.rupp.newsapp.feature.home.presentation.NewsSection
+import com.rupp.newsapp.shared.data.repository.ArticleRepository
+import com.rupp.newsapp.shared.utils.ArticleFlagEnum
 import com.rupp.newsapp.ui.theme.NewsAppTheme
 
 class ArticleDetailActivity : ComponentActivity() {
 
     private var articleId:Int = 0;
 
-    override fun onStart() {
-        super.onStart()
-        articleId = intent.getIntExtra("article_id", 0)
-    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        articleId = intent.getIntExtra("article_id", 0)
+
         setContent {
+            val repository = remember { ArticleRepository() }
+            val viewModel = remember { ArticleViewModel(repository) }
+            val state by viewModel.uiState.collectAsState()
+            val context = LocalContext.current
+
+            LaunchedEffect(Unit) {
+                if (articleId != 0) { // Add safety check
+                    viewModel.loadArticleDetail(articleId)
+                }
+            }
+
             NewsAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val article: Article = ArticleDataSource.allArticles.find { it.id == articleId } ?: ArticleDataSource.allArticles.first()
-                    ArticleScreen(article = article, onBackClick = { finish() })
+                    when {
+                        state.isLoading -> {
+                            // Show loading indicator
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
+                        state.error != null -> {
+                            LaunchedEffect(state.error) {
+                                Toast.makeText(context, "Error: ${state.error}", Toast.LENGTH_SHORT).show()
+                            }
+                            // Show error UI instead of just toast
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("Error: ${state.error}")
+                            }
+                        }
+                        state.article != null -> {
+                            ArticleScreen(
+                                article = state.article!!,
+                                onBackClick = { finish() }
+                            )
+
+                        }
+                        else -> {
+                            // Handle case where article is null but no error
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("No article found")
+                            }
+                        }
+                    }
                 }
             }
         }

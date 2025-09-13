@@ -10,13 +10,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.rupp.newsapp.core.domain.model.Category
+import com.rupp.newsapp.shared.domain.model.Category
 
 @Composable
 fun CategoryFilterChips(
     categories: List<Category>,
     selectedCategoryId: Int?,
-    onCategorySelected: (Category) -> Unit,
+    onCategorySelected: (Int) -> Unit,
     modifier: Modifier = Modifier
 ){
     LazyRow(modifier = modifier.padding(horizontal = 8.dp, vertical = 8.dp))
@@ -25,7 +25,7 @@ fun CategoryFilterChips(
             val isSelected = category.id == selectedCategoryId
             FilterChip(
                 selected = isSelected,
-                onClick = { onCategorySelected(category) },
+                onClick = { onCategorySelected(category.id) },
                 label = { Text(category.name, style = MaterialTheme.typography.bodyMedium) },
                 modifier = Modifier.padding(end = 8.dp),
                 colors = FilterChipDefaults.filterChipColors(

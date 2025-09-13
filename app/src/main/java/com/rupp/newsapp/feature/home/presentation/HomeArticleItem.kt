@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.rupp.newsapp.ArticleDetailActivity
-import com.rupp.newsapp.core.domain.model.Article
+import com.rupp.newsapp.shared.domain.model.Article
 import com.rupp.newsapp.feature.home.data.HomeData
 import com.rupp.newsapp.ui.theme.NewsAppTheme
 

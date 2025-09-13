@@ -4,48 +4,62 @@ package com.rupp.newsapp
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.rupp.newsapp.core.data.ArticleDataSource
-import com.rupp.newsapp.core.domain.model.Article
-import com.rupp.newsapp.core.presentation.ArticleCardVertical
-import com.rupp.newsapp.core.utils.ArticleFlagEnum
+import com.rupp.newsapp.feature.article.presentation.ArticleViewModel
+import com.rupp.newsapp.feature.home.presentation.ArticleByFlagViewModel
+import com.rupp.newsapp.shared.data.local.ArticleDataSource
+import com.rupp.newsapp.shared.data.repository.ArticleRepository
+import com.rupp.newsapp.shared.domain.model.Article
+import com.rupp.newsapp.shared.presentation.ArticleCardVertical
+import com.rupp.newsapp.shared.utils.ArticleFlagEnum
 import com.rupp.newsapp.ui.theme.NewsAppTheme
 
 class ArticleListByFlagActivity : ComponentActivity() {
 
     var articleFlagId:Int = 0;
 
-    override fun onStart() {
-        super.onStart()
-        articleFlagId = intent.getIntExtra("article_flag_id", 0)
-    }
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        articleFlagId = intent.getIntExtra("article_flag_id", 0)
+
         setContent {
-            NewsAppTheme {
-                val context = LocalContext.current
-                val articles: List<Article> = when (ArticleFlagEnum.fromId(articleFlagId)) {
-                    ArticleFlagEnum.BREAKING_NEWS -> ArticleDataSource.allArticles.filter { it.isBreaking }
-                    ArticleFlagEnum.FEATURED_NEWS -> ArticleDataSource.allArticles.filter { it.isFeatured }
-                    ArticleFlagEnum.LATEST_NEWS -> ArticleDataSource.allArticles.filter { it.isLatest }
-                    else -> ArticleDataSource.allArticles
+            val repository =  ArticleRepository()
+            val viewModel = remember { ArticleByFlagViewModel(repository) }
+            val state by viewModel.uiState.collectAsState()
+            val context = LocalContext.current
+
+            LaunchedEffect(Unit) {
+                if (articleFlagId != 0) { // Add safety check
+                    viewModel.loadArticlesByFlag(ArticleFlagEnum.fromId(articleFlagId)!!)
                 }
+            }
+            NewsAppTheme {
                 Scaffold(
                     topBar = {
                         TopAppBar(
@@ -61,20 +75,48 @@ class ArticleListByFlagActivity : ComponentActivity() {
                         )
                     }
                 ) { innerPadding ->
-                    LazyColumn(
-                        modifier = Modifier.padding(innerPadding),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
+                    when {
+                        state.isLoading -> {
+                            // Show loading indicator
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                CircularProgressIndicator()
+                            }
+                        }
 
-                        items(articles.size) { index ->
-                            ArticleCardVertical(
-                                article = articles[index],
-                                showBookMark = false,
-                                onClick = {
-                                    onClickArticle(context, articles[index])
-                                })
+                        state.error != null -> {
+                            LaunchedEffect(state.error) {
+                                Toast.makeText(context, "Error: ${state.error}", Toast.LENGTH_SHORT).show()
+                            }
+                            // Show error UI instead of just toast
+                            Box(
+                                modifier = Modifier.fillMaxSize(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text("Error: ${state.error}")
+                            }
+                        }
+                        else -> {
+                            LazyColumn(
+                                modifier = Modifier.padding(innerPadding),
+                                verticalArrangement = Arrangement.spacedBy(16.dp)
+                            ) {
+
+                                items(state.articles.size) { index ->
+                                    ArticleCardVertical(
+                                        article = state.articles[index],
+                                        showBookMark = false,
+                                        onClick = {
+                                            onClickArticle(context, state.articles[index])
+                                        })
+                                }
+                            }
                         }
                     }
+
+
                 }
             }
         }
