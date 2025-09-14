@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.rupp.newsapp.ArticleListByFlagActivity
+import com.rupp.newsapp.BuildConfig
 import com.rupp.newsapp.shared.domain.model.Article
 import com.rupp.newsapp.shared.utils.ArticleFlagEnum
 import com.rupp.newsapp.ui.theme.NewsAppTheme
@@ -68,7 +69,9 @@ fun HomeScreenContent() {
                     }
                 }
                 else -> {
-                    NewsSection(ArticleFlagEnum.BREAKING_NEWS, state.breakingArticles)
+                    if (BuildConfig.IS_PREMIUM) {
+                        NewsSection(ArticleFlagEnum.BREAKING_NEWS, state.breakingArticles)
+                    }
                     NewsSection(ArticleFlagEnum.FEATURED_NEWS, state.featuredArticles)
                     NewsSection(ArticleFlagEnum.LATEST_NEWS, state.latestArticles)
                 }

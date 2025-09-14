@@ -9,7 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.rupp.newsapp.feature.main.presentation.MainScreen
@@ -29,32 +33,27 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContent {
+            var isOnboardingCompleted by remember {
+                mutableStateOf(onboardingUtils.isOnboardingCompleted())
+            }
+
             NewsAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    if (onboardingUtils.isOnboardingCompleted()) {
+                    if (isOnboardingCompleted) {
                         MainScreen()
                     } else {
-                        ShowOnboardingScreen()
+                        OnboardingScreen(
+                            onFinished = {
+                                onboardingUtils.setOnboardingCompleted()
+                                isOnboardingCompleted = true
+                            }
+                        )
                     }
-                }
-            }
-        }
-
-    }
-
-
-    @Composable
-    private fun ShowOnboardingScreen() {
-        val scope = rememberCoroutineScope()
-        OnboardingScreen {
-            onboardingUtils.setOnboardingCompleted()
-            scope.launch {
-                setContent {
-                    MainScreen()
                 }
             }
         }
