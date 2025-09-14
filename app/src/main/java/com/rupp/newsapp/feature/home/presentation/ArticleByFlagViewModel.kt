@@ -5,11 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.rupp.newsapp.core.network.ApiResult
 import com.rupp.newsapp.shared.data.repository.ArticleRepository
 import com.rupp.newsapp.shared.utils.ArticleFlagEnum
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class ArticleByFlagViewModel(private val repository: ArticleRepository) : ViewModel()  {
+@HiltViewModel
+class ArticleByFlagViewModel @Inject constructor(private val repository: ArticleRepository) : ViewModel()  {
 
     private val _uiState = MutableStateFlow(ArticleByFlagUiState())
     val uiState: MutableStateFlow<ArticleByFlagUiState> = _uiState

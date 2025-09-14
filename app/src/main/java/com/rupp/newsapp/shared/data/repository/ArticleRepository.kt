@@ -2,12 +2,15 @@ package com.rupp.newsapp.shared.data.repository
 
 import com.rupp.newsapp.core.network.ApiResult
 import com.rupp.newsapp.core.network.NetworkUtils
-import com.rupp.newsapp.core.network.RetrofitInstance
 import com.rupp.newsapp.shared.data.remote.ArticleApiService
 import com.rupp.newsapp.shared.domain.model.Article
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class ArticleRepository {
-    private val api = RetrofitInstance.retrofit.create(ArticleApiService::class.java)
+@Singleton
+class ArticleRepository @Inject constructor(
+    private val api: ArticleApiService
+) {
 
     suspend fun getLatestArticles(): ApiResult<List<Article>> {
         return NetworkUtils.safeApiCall { api.getArticles(isLatest = true) }

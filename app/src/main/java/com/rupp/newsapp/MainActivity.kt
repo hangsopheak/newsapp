@@ -16,8 +16,11 @@ import com.rupp.newsapp.feature.main.presentation.MainScreen
 import com.rupp.newsapp.feature.onboarding.presentation.OnboardingScreen
 import com.rupp.newsapp.feature.onboarding.util.OnboardingUtils
 import com.rupp.newsapp.ui.theme.NewsAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val onboardingUtils by lazy { OnboardingUtils(this) }

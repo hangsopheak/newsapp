@@ -8,7 +8,6 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -16,17 +15,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.rupp.newsapp.feature.article.presentation.ArticleScreen
 import com.rupp.newsapp.feature.article.presentation.ArticleViewModel
-import com.rupp.newsapp.feature.home.presentation.NewsSection
-import com.rupp.newsapp.shared.data.repository.ArticleRepository
-import com.rupp.newsapp.shared.utils.ArticleFlagEnum
 import com.rupp.newsapp.ui.theme.NewsAppTheme
+import dagger.hilt.android.AndroidEntryPoint
+
+
+@AndroidEntryPoint
 
 class ArticleDetailActivity : ComponentActivity() {
 
@@ -40,8 +39,7 @@ class ArticleDetailActivity : ComponentActivity() {
         articleId = intent.getIntExtra("article_id", 0)
 
         setContent {
-            val repository = remember { ArticleRepository() }
-            val viewModel = remember { ArticleViewModel(repository) }
+            val viewModel : ArticleViewModel = hiltViewModel()
             val state by viewModel.uiState.collectAsState()
             val context = LocalContext.current
 

@@ -16,20 +16,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.rupp.newsapp.ArticleDetailActivity
-import com.rupp.newsapp.shared.data.repository.ArticleRepository
-import com.rupp.newsapp.shared.data.repository.CategoryRepository
 import com.rupp.newsapp.shared.domain.model.Article
 import com.rupp.newsapp.shared.presentation.ArticleCardVertical
 
@@ -37,14 +34,7 @@ import com.rupp.newsapp.shared.presentation.ArticleCardVertical
 @Preview
 fun ExploreScreenContent() {
 
-    val articleRepository = remember { ArticleRepository() }
-    val categoryRepository = remember { CategoryRepository() }
-    val viewModel = remember {
-        ExploreViewModel(
-            articleRepository = articleRepository,
-            categoryRepository = categoryRepository
-        )
-    }
+    val viewModel : ExploreViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 

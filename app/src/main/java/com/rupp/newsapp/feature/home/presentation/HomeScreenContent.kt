@@ -16,16 +16,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Devices.PIXEL_5
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.rupp.newsapp.ArticleListByFlagActivity
 import com.rupp.newsapp.shared.domain.model.Article
-import com.rupp.newsapp.shared.data.repository.ArticleRepository
 import com.rupp.newsapp.shared.utils.ArticleFlagEnum
 import com.rupp.newsapp.ui.theme.NewsAppTheme
 
@@ -47,9 +46,7 @@ fun NewsSection(
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, device = PIXEL_5)
 fun HomeScreenContent() {
-    val repository = remember { ArticleRepository() }
-    val viewModel =  HomeViewModel(repository)
-
+    val viewModel: HomeViewModel = hiltViewModel()
     val state by viewModel.uiState.collectAsState()
     val context = LocalContext.current
     LaunchedEffect(Unit) { viewModel.loadHomeArticles() }

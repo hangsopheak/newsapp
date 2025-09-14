@@ -24,20 +24,19 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.rupp.newsapp.feature.article.presentation.ArticleViewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.rupp.newsapp.feature.home.presentation.ArticleByFlagViewModel
-import com.rupp.newsapp.shared.data.local.ArticleDataSource
-import com.rupp.newsapp.shared.data.repository.ArticleRepository
 import com.rupp.newsapp.shared.domain.model.Article
 import com.rupp.newsapp.shared.presentation.ArticleCardVertical
 import com.rupp.newsapp.shared.utils.ArticleFlagEnum
 import com.rupp.newsapp.ui.theme.NewsAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ArticleListByFlagActivity : ComponentActivity() {
 
     var articleFlagId:Int = 0;
@@ -49,8 +48,7 @@ class ArticleListByFlagActivity : ComponentActivity() {
         articleFlagId = intent.getIntExtra("article_flag_id", 0)
 
         setContent {
-            val repository =  ArticleRepository()
-            val viewModel = remember { ArticleByFlagViewModel(repository) }
+            val viewModel : ArticleByFlagViewModel = hiltViewModel()
             val state by viewModel.uiState.collectAsState()
             val context = LocalContext.current
 

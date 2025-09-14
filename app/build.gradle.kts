@@ -1,7 +1,11 @@
+import org.gradle.kotlin.dsl.implementation
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.dagger.hilt.android")
+    kotlin("kapt")
 }
 
 android {
@@ -41,6 +45,13 @@ android {
 }
 
 dependencies {
+
+    // Hilt
+    implementation("com.google.dagger:hilt-android:2.57.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.57.1")
+    // Hilt + Compose integration
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("io.coil-kt:coil-compose:2.2.2")
     implementation("com.squareup.retrofit2:retrofit:2.11.0")

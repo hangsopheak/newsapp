@@ -6,11 +6,14 @@ import com.rupp.newsapp.core.network.ApiResult
 import com.rupp.newsapp.shared.data.repository.ArticleRepository
 import com.rupp.newsapp.shared.data.repository.CategoryRepository
 import com.rupp.newsapp.shared.domain.model.Article
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ExploreViewModel(private val categoryRepository: CategoryRepository, private val articleRepository: ArticleRepository) : ViewModel()  {
+@HiltViewModel
+class ExploreViewModel @Inject constructor (private val categoryRepository: CategoryRepository, private val articleRepository: ArticleRepository) : ViewModel()  {
 
     private val _uiState = MutableStateFlow(ExploreUiState())
     val uiState: MutableStateFlow<ExploreUiState> = _uiState
