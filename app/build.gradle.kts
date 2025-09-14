@@ -18,7 +18,9 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
+        // Expose gradle.properties into BuildConfig
+        buildConfigField("String", "API_BASE_URL", "\"${project.findProperty("API_BASE_URL")}\"")
+        buildConfigField("String", "DB_NAME", "\"${project.findProperty("DB_NAME")}\"")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -41,7 +43,9 @@ android {
     buildFeatures {
         compose = true
         viewBinding = true
+        android.buildFeatures.buildConfig = true
     }
+
 }
 
 dependencies {
