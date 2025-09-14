@@ -65,8 +65,6 @@ suspend fun fetchUserFriends(): String {
  * We'll use them to simulate a real-world UI scenario where a heavy
  * operation would block the main thread without proper dispatching.
  */
-
-
 fun main() = runBlocking {
     println("--------------------------------------------------")
     println("DEMO 1: COROUTINE FUNDAMENTALS (Sequential vs. Concurrent)")
@@ -104,7 +102,7 @@ fun main() = runBlocking {
     // Simulate a button click on the UI/Main thread
     println("\nUser clicks 'Load Profile' button...")
 
-    launch(Dispatchers.Main) { // In a real Android app, this would be on the UI thread
+    launch(Dispatchers.Unconfined) { // Using Unconfined for this JVM demo
         println("UI: Showing loading indicator...")
 
         // Run heavy I/O operations on the IO dispatcher
@@ -128,8 +126,8 @@ fun main() = runBlocking {
             "Processed: $profileData & $postsData"
         }
 
-        // Switch back to the Main dispatcher to update the UI
-        withContext(Dispatchers.Main) {
+        // Switch back to the Unconfined dispatcher to simulate updating the UI
+        withContext(Dispatchers.Unconfined) {
             println("UI: Hiding loading indicator.")
             println("UI: Displaying processed data: '$processedData'")
         }
